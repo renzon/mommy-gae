@@ -152,6 +152,21 @@ def assignable(name,property):
 
 
 def make_one(cls,**kwargs):
+    '''
+    Warning: This functon only create the instance, it not save it on db.
+    Use it to create your model and use model.put() or ndb.put_multi(your_model_list)
+    to save entities on you data base.
+
+    Arguments:
+
+    cls: class used to generate a populated model instance
+    kwargs: the model properties to be assigned to a specific value
+
+    Ex: mommy.make_one(MyModel, name="Hello World")
+
+    This function call will return a MyModel instance with property name set to "Hello World"
+    Any oder properties will have some default value
+    '''
     properties=cls._properties
     generated_kwargs={k:_generate_default(v,cls) for k,v in properties.iteritems()
                     if assignable(k,v) and not k in kwargs}
