@@ -2,6 +2,7 @@ from unittest import TestCase
 import datetime
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb.polymodel import PolyModel
+from google.appengine.ext.testbed import Testbed
 from mommygae import mommy
 
 NOW = datetime.datetime.now()
@@ -231,3 +232,12 @@ class MommyTests(TestCase):
         d = {"list": [1], "str": "foo2"}
         stub = mommy.make_one(Stub, pickle=d)
         self.assertDictEqual(d, stub.pickle)
+
+    def test_save(self):
+        testbed = Testbed()
+        testbed.activate()
+        testbed.init_datastore_v3_stub()
+        testbed.init_memcache_stub()
+        s = mommy.save_one(Stub)
+        self.assertIsNotNone(s.key)
+        testbed.deactivate()
